@@ -15,7 +15,7 @@ type Config struct {
 	Recreate    bool
 }
 
-const DSN = "vault.db"
+const DSN = "vault.store"
 
 func Connect(config *Config) {
 	if config.Recreate {
