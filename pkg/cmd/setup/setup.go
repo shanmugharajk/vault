@@ -12,10 +12,8 @@ func NewSetupCmd() *cobra.Command {
 		Long:    "This command performs the initial setup required for the first time run",
 		Aliases: []string{"s"},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			database.Connect(&database.Config{
-				Automigrate: true,
-				Recreate:    true,
-			})
+			database.Recreate()
+			database.Migrate()
 
 			return nil
 		},

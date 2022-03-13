@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/cobra"
 
 	fetchCmd "github.com/shanmugharajk/vault/pkg/cmd/fetch"
+	saveCmd "github.com/shanmugharajk/vault/pkg/cmd/save"
 	setupCmd "github.com/shanmugharajk/vault/pkg/cmd/setup"
 )
 
@@ -27,6 +28,7 @@ func NewCmdRoot() *cobra.Command {
 
 	rootCmd.AddCommand(setupCmd.NewSetupCmd())
 	rootCmd.AddCommand(fetchCmd.NewFetchCmd())
+	rootCmd.AddCommand(saveCmd.NewSaveCmd())
 
 	return rootCmd
 }

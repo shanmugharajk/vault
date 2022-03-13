@@ -7,24 +7,14 @@ import (
 	"github.com/shanmugharajk/vault/internal/models"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
-
-type Config struct {
-	Automigrate bool
-	Recreate    bool
-}
 
 const DSN = "vault.store"
 
-func Connect(config *Config) {
-	if config.Recreate {
-		os.Remove(DSN)
-	}
-
+func Connect() {
 	var err error
 	Db, err = gorm.Open(sqlite.Open(DSN), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
+		// Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
 		panic("failed to connect database")
@@ -35,12 +25,15 @@ func Connect(config *Config) {
 	if err != nil {
 		panic("failed to connect database")
 	}
+}
 
-	fmt.Println("Connection Opened to Database")
-
-	if config.Automigrate {
-		Db.AutoMigrate(&models.Secret{})
-	}
-
+func Migrate() {
+	Db.AutoMigrate(&models.Secret{})
 	fmt.Println("Database Migrated")
+}
+
+func Recreate() {
+	os.Remove(DSN)
+	Connect()
+	Migrate()
 }
