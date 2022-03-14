@@ -10,11 +10,9 @@ func NewSetupCmd() *cobra.Command {
 		Use:     "setup",
 		Short:   "Initial setup",
 		Long:    "This command performs the initial setup required for the first time run",
-		Aliases: []string{"s"},
+		Aliases: []string{"setup"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			database.Recreate()
-			database.Migrate()
-
 			return nil
 		},
 	}

@@ -8,7 +8,22 @@ import (
 	"golang.org/x/term"
 )
 
-func PromptSecret(promptText string) string {
+func ReadSecrets() (string, string) {
+	var passphrase string
+	var saltkey string
+
+	for len(passphrase) < 10 {
+		passphrase = ReadPassword("\nplease enter passphrase with minimum of 10 characters\n", 0)
+	}
+
+	for len(saltkey) < 5 {
+		saltkey = ReadPassword("\nplease enter saltkey with minimum of 5 characters\n", 0)
+	}
+
+	return passphrase, saltkey
+}
+
+func ReadPassword(promptText string, minLength int) string {
 	fmt.Print(promptText)
 
 	bytepw, err := term.ReadPassword(int(syscall.Stdin))
@@ -17,7 +32,11 @@ func PromptSecret(promptText string) string {
 	}
 
 	pass := string(bytepw)
-	fmt.Printf("You've entered: %q\n", pass)
+	for len(pass) < minLength {
+		ReadPassword(promptText, minLength)
+	}
+
+	fmt.Printf("You've entered: %q\n\n", pass)
 
 	return pass
 }

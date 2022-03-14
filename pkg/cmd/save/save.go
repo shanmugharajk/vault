@@ -16,21 +16,12 @@ func NewSaveCmd() *cobra.Command {
 		Use:     "save",
 		Short:   "Save the secret",
 		Long:    "Saves the secret password with the key, value encrypted with the passphrase and saltkey given",
-		Aliases: []string{"save"},
+		Aliases: []string{"s"},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) < 2 {
-				return errors.New("pass the right no of arguments")
-			}
+			passphrase, saltkey := utils.ReadSecrets()
 
-			key := args[0]
-			value := args[1]
-
-			if len(key) < 1 || len(value) < 1 {
-				return errors.New("pass the key, value with minimum length 1")
-			}
-
-			passphrase := utils.PromptSecret("please enter passphrase\n")
-			saltkey := utils.PromptSecret("please enter key\n")
+			key := utils.ReadPassword("\nenter the key to save with minimum length 5\n", 5)
+			value := utils.ReadPassword("\nenter the value to save\n", 0)
 
 			keyToSave := crypt.CreateHashKey(key, saltkey)
 			saltedPassphrase := crypt.CreateHashKey(passphrase, saltkey)
