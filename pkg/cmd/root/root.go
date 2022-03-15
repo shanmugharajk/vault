@@ -4,7 +4,9 @@ import (
 	"github.com/MakeNowJust/heredoc"
 	"github.com/spf13/cobra"
 
+	closeCmd "github.com/shanmugharajk/vault/pkg/cmd/close"
 	fetchCmd "github.com/shanmugharajk/vault/pkg/cmd/fetch"
+	openCmd "github.com/shanmugharajk/vault/pkg/cmd/open"
 	saveCmd "github.com/shanmugharajk/vault/pkg/cmd/save"
 	setupCmd "github.com/shanmugharajk/vault/pkg/cmd/setup"
 )
@@ -17,7 +19,7 @@ func NewCmdRoot() *cobra.Command {
 		Long: heredoc.Doc(`
 		vault is command line tool to save passwords / secret strings with a single master password
 
-			Run
+			Run 
 				$ vault help
 
 			to learn more.
@@ -29,6 +31,8 @@ func NewCmdRoot() *cobra.Command {
 	rootCmd.AddCommand(setupCmd.NewSetupCmd())
 	rootCmd.AddCommand(fetchCmd.NewFetchCmd())
 	rootCmd.AddCommand(saveCmd.NewSaveCmd())
+	rootCmd.AddCommand(openCmd.NewOpenCmd())
+	rootCmd.AddCommand(closeCmd.NewCloseCmd())
 
 	return rootCmd
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/shanmugharajk/vault/internal/crypt"
 	"github.com/shanmugharajk/vault/internal/database"
 	"github.com/shanmugharajk/vault/internal/models"
+	"github.com/shanmugharajk/vault/internal/secret"
 	"github.com/shanmugharajk/vault/internal/utils"
 	"github.com/spf13/cobra"
 )
@@ -18,7 +19,14 @@ func NewFetchCmd() *cobra.Command {
 		Long:    "Fetch the secret password with the key",
 		Aliases: []string{"f"},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			passphrase, saltkey := utils.ReadSecrets()
+			var passphrase string
+			var saltkey string
+
+			passphrase, saltkey = secret.GetSecrets()
+			if len(passphrase) == 0 || len(saltkey) == 0 {
+				passphrase, saltkey = utils.ReadSecrets()
+			}
+
 			key := utils.ReadPassword("\nenter the key to fetch\n", 0)
 
 			keyToFetch := crypt.CreateHashKey(key, saltkey)
