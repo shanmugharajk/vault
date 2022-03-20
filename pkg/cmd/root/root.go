@@ -14,16 +14,12 @@ import (
 
 func NewCmdRoot() *cobra.Command {
 	var rootCmd = &cobra.Command{
-		Use:     "vault",
-		Aliases: []string{"va"},
-		Short:   "vault is command line tool to save passwords",
+		Use:   "vault",
+		Short: "vault is command line tool to save passwords",
 		Long: heredoc.Doc(`
-		vault is command line tool to save passwords / secret strings with a single master password
-
-			Run 
-				$ vault help
-
-			to learn more.
+		About:
+		  vault is command line tool to save passwords / secret strings with a single master password 'vault help' in
+		the terminal to learn more.
 		`),
 		SilenceErrors: true,
 		SilenceUsage:  true,
