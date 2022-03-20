@@ -30,11 +30,11 @@ func NewSaveCmd() *cobra.Command {
 			key := utils.ReadPassword("\nenter the key to save with minimum length 5\n", 5)
 			value := utils.ReadPassword("\nenter the value to save\n", 0)
 
-			keyToSave := crypt.CreateHashKey(key, saltkey)
 			saltedPassphrase := crypt.CreateHashKey(passphrase, saltkey)
+			keyToSave := crypt.Encrypt([]byte(key), saltedPassphrase)
 			valueToSave := crypt.Encrypt([]byte(value), saltedPassphrase)
 
-			result := database.Db.Create(&models.Secret{Key: keyToSave, Value: string(valueToSave)})
+			result := database.Db.Create(&models.Secret{Key: string(keyToSave), Value: string(valueToSave)})
 			if result.RowsAffected <= 0 || result.Error != nil {
 				return errors.New("sorry, unable to save the data")
 			}

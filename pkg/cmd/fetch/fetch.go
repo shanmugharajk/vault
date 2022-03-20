@@ -29,11 +29,16 @@ func NewFetchCmd() *cobra.Command {
 
 			key := utils.ReadPassword("\nenter the key to fetch\n", 0)
 
-			keyToFetch := crypt.CreateHashKey(key, saltkey)
 			saltedPassphrase := crypt.CreateHashKey(passphrase, saltkey)
+			keyToFetch := crypt.Encrypt([]byte(key), saltedPassphrase)
+
+			fmt.Println("enc", crypt.Encrypt([]byte(key), saltedPassphrase))
+			fmt.Println("enc", crypt.Encrypt([]byte(key), saltedPassphrase))
+			fmt.Println("enc", crypt.Encrypt([]byte(key), saltedPassphrase))
+			fmt.Println("enc", crypt.Encrypt([]byte(key), saltedPassphrase))
 
 			var secret models.Secret
-			database.Db.First(&secret, "key = ?", keyToFetch)
+			database.Db.First(&secret, "key = ?", string(keyToFetch))
 
 			if len(secret.Value) == 0 {
 				return errors.New("sorry, unable to find the matching key")
