@@ -1,8 +1,9 @@
 package fetchall
 
 import (
-	"fmt"
+	"os"
 
+	"github.com/olekukonko/tablewriter"
 	"github.com/shanmugharajk/vault/internal/crypt"
 	"github.com/shanmugharajk/vault/internal/database"
 	"github.com/shanmugharajk/vault/internal/models"
@@ -31,10 +32,16 @@ func NewFetchAllCmd() *cobra.Command {
 			var secrets []models.Secret
 			database.Db.Find(&secrets)
 
+			table := tablewriter.NewWriter(os.Stdout)
+			table.SetHeader([]string{"Key", "Value"})
+
 			for _, v := range secrets {
+				key := crypt.Decrypt([]byte(v.Key), saltedPassphrase)
 				value := crypt.Decrypt([]byte(v.Value), saltedPassphrase)
-				fmt.Println(string(value))
+				table.Append([]string{string(key), string(value)})
 			}
+
+			table.Render()
 
 			return nil
 		},
