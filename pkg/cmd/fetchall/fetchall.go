@@ -34,6 +34,8 @@ func NewFetchAllCmd() *cobra.Command {
 
 			table := tablewriter.NewWriter(os.Stdout)
 			table.SetHeader([]string{"Key", "Value"})
+			table.SetAutoWrapText(false)
+			table.SetRowLine(true)
 
 			for _, v := range secrets {
 				key := crypt.Decrypt([]byte(v.Key), saltedPassphrase)
