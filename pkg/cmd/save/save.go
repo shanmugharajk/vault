@@ -26,7 +26,7 @@ func NewSaveCmd() *cobra.Command {
 				passphrase, saltkey = secret.ReadSecrets()
 			}
 
-			key := secret.ReadPassword("\nenter the key to save with minimum length 5\n", 5)
+			key := secret.ReadPassword("\nenter the key to save with minimum length 2\n", 2)
 			value := secret.ReadPassword("\nenter the value to save\n", 0)
 
 			saltedPassphrase := crypt.CreateHashKey(passphrase, saltkey)
