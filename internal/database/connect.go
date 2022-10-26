@@ -3,17 +3,27 @@ package database
 import (
 	"fmt"
 	"os"
+	"path"
 
 	"github.com/shanmugharajk/vault/internal/models"
+	"github.com/shanmugharajk/vault/internal/utils"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
-const DSN = "vault.store"
+const DB_NAME = "vault.store"
+
+var dbPath string
+
+func init() {
+	dbPath = utils.GetConfig().DbPath
+}
 
 func Connect() {
 	var err error
-	Db, err = gorm.Open(sqlite.Open(DSN), &gorm.Config{
+
+	dbFilePath := path.Join(dbPath, DB_NAME)
+	Db, err = gorm.Open(sqlite.Open(dbFilePath), &gorm.Config{
 		// Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
@@ -33,7 +43,7 @@ func Migrate() {
 }
 
 func Recreate() {
-	os.Remove(DSN)
+	os.Remove(DB_NAME)
 	Connect()
 	Migrate()
 }
