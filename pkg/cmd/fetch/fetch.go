@@ -8,7 +8,6 @@ import (
 	"github.com/shanmugharajk/vault/internal/database"
 	"github.com/shanmugharajk/vault/internal/models"
 	"github.com/shanmugharajk/vault/internal/secret"
-	"github.com/shanmugharajk/vault/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -24,10 +23,10 @@ func NewFetchCmd() *cobra.Command {
 
 			passphrase, saltkey = secret.GetSecrets()
 			if len(passphrase) == 0 || len(saltkey) == 0 {
-				passphrase, saltkey = utils.ReadSecrets()
+				passphrase, saltkey = secret.ReadSecrets()
 			}
 
-			key := utils.ReadPassword("\nenter the key to fetch\n", 0)
+			key := secret.ReadPassword("\nenter the key to fetch\n", 0)
 
 			saltedPassphrase := crypt.CreateHashKey(passphrase, saltkey)
 			keyToFetch := crypt.Encrypt([]byte(key), saltedPassphrase)

@@ -8,7 +8,6 @@ import (
 	"github.com/shanmugharajk/vault/internal/database"
 	"github.com/shanmugharajk/vault/internal/models"
 	"github.com/shanmugharajk/vault/internal/secret"
-	"github.com/shanmugharajk/vault/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -24,11 +23,11 @@ func NewSaveCmd() *cobra.Command {
 
 			passphrase, saltkey = secret.GetSecrets()
 			if len(passphrase) == 0 || len(saltkey) == 0 {
-				passphrase, saltkey = utils.ReadSecrets()
+				passphrase, saltkey = secret.ReadSecrets()
 			}
 
-			key := utils.ReadPassword("\nenter the key to save with minimum length 5\n", 5)
-			value := utils.ReadPassword("\nenter the value to save\n", 0)
+			key := secret.ReadPassword("\nenter the key to save with minimum length 5\n", 5)
+			value := secret.ReadPassword("\nenter the value to save\n", 0)
 
 			saltedPassphrase := crypt.CreateHashKey(passphrase, saltkey)
 			keyToSave := crypt.Encrypt([]byte(key), saltedPassphrase)

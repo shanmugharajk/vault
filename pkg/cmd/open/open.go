@@ -3,7 +3,6 @@ package open
 import (
 	"github.com/MakeNowJust/heredoc"
 	"github.com/shanmugharajk/vault/internal/secret"
-	"github.com/shanmugharajk/vault/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +16,7 @@ func NewOpenCmd() *cobra.Command {
 		`),
 		Aliases: []string{"o"},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return secret.SetSecrets(utils.ReadSecrets())
+			return secret.SetSecrets(secret.ReadSecrets())
 		},
 	}
 
