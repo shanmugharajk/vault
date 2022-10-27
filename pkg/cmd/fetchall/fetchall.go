@@ -16,7 +16,7 @@ func NewFetchAllCmd() *cobra.Command {
 		Use:     "fetchall",
 		Short:   "Fetches all the saved secrets",
 		Long:    "Fetches all the saved secrets.",
-		Aliases: []string{"c"},
+		Aliases: []string{"fa"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var passphrase string
 			var saltkey string
