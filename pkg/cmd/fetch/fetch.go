@@ -1,7 +1,6 @@
 package fetch
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/shanmugharajk/vault/internal/crypt"
@@ -26,27 +25,21 @@ func NewFetchCmd() *cobra.Command {
 				passphrase, saltkey = secret.ReadSecrets()
 			}
 
-			key := secret.ReadPassword("\nenter the key to fetch\n", 0)
-
 			saltedPassphrase := crypt.CreateHashKey(passphrase, saltkey)
-			keyToFetch := crypt.Encrypt([]byte(key), saltedPassphrase)
+			keyToFetch := secret.ReadPassword("\nenter the key to fetch\n", 0)
 
-			fmt.Println("enc", crypt.Encrypt([]byte(key), saltedPassphrase))
-			fmt.Println("enc", crypt.Encrypt([]byte(key), saltedPassphrase))
-			fmt.Println("enc", crypt.Encrypt([]byte(key), saltedPassphrase))
-			fmt.Println("enc", crypt.Encrypt([]byte(key), saltedPassphrase))
+			var secrets []models.Secret
+			database.Db.Find(&secrets)
 
-			var secret models.Secret
-			database.Db.First(&secret, "key = ?", string(keyToFetch))
-
-			if len(secret.Value) == 0 {
-				return errors.New("sorry, unable to find the matching key")
+			for _, v := range secrets {
+				key := string(crypt.Decrypt([]byte(v.Key), saltedPassphrase))
+				if key == keyToFetch {
+					fmt.Println(string(crypt.Decrypt([]byte(v.Value), saltedPassphrase)))
+					return nil
+				}
 			}
 
-			value := crypt.Decrypt([]byte(secret.Value), saltedPassphrase)
-			fmt.Println(string(value))
-
-			return nil
+			return fmt.Errorf("no matching records found for %s", string(keyToFetch))
 		},
 	}
 
