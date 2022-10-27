@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/cobra"
 
 	closeCmd "github.com/shanmugharajk/vault/pkg/cmd/close"
+	deleteCmd "github.com/shanmugharajk/vault/pkg/cmd/delete"
 	fetchCmd "github.com/shanmugharajk/vault/pkg/cmd/fetch"
 	fetchAllCmd "github.com/shanmugharajk/vault/pkg/cmd/fetchall"
 	openCmd "github.com/shanmugharajk/vault/pkg/cmd/open"
@@ -31,6 +32,7 @@ func NewCmdRoot() *cobra.Command {
 	rootCmd.AddCommand(openCmd.NewOpenCmd())
 	rootCmd.AddCommand(closeCmd.NewCloseCmd())
 	rootCmd.AddCommand(fetchAllCmd.NewFetchAllCmd())
+	rootCmd.AddCommand(deleteCmd.NewDeleteCmd())
 
 	return rootCmd
 }
