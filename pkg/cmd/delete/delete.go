@@ -26,30 +26,28 @@ func NewDeleteCmd() *cobra.Command {
 			}
 
 			saltedPassphrase := crypt.CreateHashKey(passphrase, saltkey)
-
-			itemToDelete := secret.ReadPassword("\nenter the key to delete\n", 0)
+			keyToDelete := secret.ReadPassword("\nenter the key to delete\n", 0)
 
 			var secrets []models.Secret
 			database.Db.Find(&secrets)
 
 			for _, v := range secrets {
 				key := string(crypt.Decrypt([]byte(v.Key), saltedPassphrase))
-				if key != itemToDelete {
+				if key != keyToDelete {
 					continue
 				}
 
 				res := database.Db.Delete(&models.Secret{Key: v.Key})
 
 				if res.RowsAffected > 0 {
-					fmt.Printf("Successfully deleted the '%s'\n", string(itemToDelete))
+					fmt.Printf("Successfully deleted the '%s'\n", string(keyToDelete))
 				}
 
 				return res.Error
 			}
 
-			fmt.Printf("No matching records found for '%s'\n", string(itemToDelete))
+			return fmt.Errorf("no matching records found for %s", string(keyToDelete))
 
-			return nil
 		},
 	}
 
